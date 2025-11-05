@@ -1,0 +1,51 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df=pd.read_csv("")
+df
+
+df.isnull().sum()
+
+df.dropna(inplace=True)
+
+df.isnull().sum()
+
+df.head()
+
+X=df[['QUANTITYORDERED','PRICEEACH','SALES']]
+X
+
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+x_scaled=sc.fit_transform(X)
+
+x_scaled
+
+#Kmeans clustering 
+from sklearn.cluster import KMeans
+
+#inertia stores all the values of SumofSquaredError
+inertia=[]
+K=range(1,11)
+for k in K:
+    kmeans=KMeans(n_clusters=k)
+    kmeans.fit(x_scaled)
+    inertia.append(kmeans.inertia_)
+
+
+#plotting 
+plt.figure(figsize=(12,8))
+plt.plot(K,inertia,'bo-')
+plt.xlabel('K ')
+plt.ylabel('Inertia')
+plt.title('K means Clustering')
+plt.show()
+
+
+#optimal k value=4
+optimal_k=4
+kmeans=KMeans(n_clusters=optimal_k)
+df['Clusters']=kmeans.fit_predict(x_scaled)
+df[['QUANTITYORDERED','PRICEEACH','SALES','Clusters']]
